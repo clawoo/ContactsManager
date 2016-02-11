@@ -12,7 +12,7 @@ Choose ContactsManager for your next project, or migrate over your existing proj
 
 ## Installation
 
-* Using Cocoapods
+* Using CocoaPods
 * Copying all the files into your project
 
 ### CocoaPods:
