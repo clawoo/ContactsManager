@@ -31,6 +31,16 @@ After this import ContactsManager:
 3. In the Class that you want get the device contacts, import ContactsManager: 
 ```#import "KTSContactsManager.h```
 
+### Using for iOS 10 and later:
+
+In iOS 9 and below you should set NSContactsUsageDescription in your plist file. But in iOS 10 and later you must do it because when your app the first time turns to Address Book crash happens. Like:
+```
+<key>NSContactsUsageDescription</key>
+<string>$(PRODUCT_NAME) uses photos</string>
+```
+See other usage Cocoa keys [here](https://developer.apple.com/library/content/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html).
+
+
 ## Usage
 
 ### Import All Contacts:
