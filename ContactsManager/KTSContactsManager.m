@@ -42,6 +42,8 @@
 
 - (void)importContacts:(void (^)(NSArray *))contactsHandler
 {
+    KTSContactsManagerField fields = KTSContactsManagerFieldLastName | KTSContactsManagerFieldFirstName | KTSContactsManagerFieldNickName | KTSContactsManagerFieldCompany | KTSContactsManagerFieldPhones | KTSContactsManagerFieldPersonID | KTSContactsManagerFieldHasImage;
+    
     if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied || ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusRestricted)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Address Book Access Denied" message:@"Please grant us access to your Address Book in Settings -> Privacy -> Contacts" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:@"OK", nil];
@@ -57,7 +59,7 @@
             if (granted)
             {
                 NSMutableArray *contactsList = [(__bridge NSArray *)ABAddressBookCopyArrayOfAllPeople(addressBook) mutableCopy];
-                contactsHandler([[NSArray alloc] initWithArray:[self extractContactsInDictionary:contactsList extractOptions:KTSContactsManagerFieldAll]]);
+                contactsHandler([[NSArray alloc] initWithArray:[self extractContactsInDictionary:contactsList extractOptions:fields]]);
                 CFRelease(addressBook);
             }
         });
@@ -69,10 +71,34 @@
         CFErrorRef *error = nil;
         ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(nil, error);
         NSMutableArray *contactsList = [(__bridge NSArray *)ABAddressBookCopyArrayOfAllPeople(addressBook) mutableCopy];
-        contactsHandler([[NSArray alloc] initWithArray:[self extractContactsInDictionary:contactsList extractOptions:KTSContactsManagerFieldAll]]);
+        contactsHandler([[NSArray alloc] initWithArray:[self extractContactsInDictionary:contactsList extractOptions:fields]]);
         CFRelease(addressBook);
         return;
     }
+}
+
+- (NSData *)fetchImageDataForContact:(NSString *)contactId {
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized)
+    {
+        CFErrorRef *error = nil;
+        ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(nil, error);
+        
+        ABRecordRef record = ABAddressBookGetPersonWithRecordID(addressBook, (ABRecordID)contactId.intValue);
+        
+        if (record && ABPersonHasImageData(record)) {
+            
+            CFDataRef cfData = ABPersonCopyImageDataWithFormat(record, kABPersonImageFormatOriginalSize);
+            NSData *data = nil;
+            if (cfData) {
+                NSData *data = [NSData dataWithData:cfData];
+                CFRelease(cfData);
+            }
+            CFRelease(addressBook);
+            return data;
+        }
+        CFRelease(addressBook);
+}
+    return nil;
 }
 
 - (NSMutableArray *)extractContactsInDictionary:(NSMutableArray *)contactsList extractOptions:(KTSContactsManagerField)fields
@@ -169,7 +195,12 @@
             NSData *data = CFBridgingRelease(ABPersonCopyImageData(record));
             if (data){
                 person[@"image"] = [UIImage imageWithData:data];
-            }            
+            }
+        }
+        
+        //Image
+        if (KTSContactsManagerFieldHasImage & fields){
+            person[@"hasImage"] = [NSNumber numberWithBool:ABPersonHasImageData(record)];
         }
         
         if (KTSContactsManagerFieldPhones & fields){

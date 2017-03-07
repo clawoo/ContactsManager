@@ -30,6 +30,7 @@ typedef NS_OPTIONS(NSUInteger, KTSContactsManagerField){
     KTSContactsManagerFieldPhones                = 1 << 16,
     KTSContactsManagerFieldEmails                = 1 << 17,
     KTSContactsManagerFieldImage                 = 1 << 18,
+    KTSContactsManagerFieldHasImage              = 1 << 19,
     KTSContactsManagerFieldAll                   = KTSContactsManagerFieldBirthday          |
                                                    KTSContactsManagerFieldCompany           |
                                                    KTSContactsManagerFieldCreatedAt         |
@@ -39,6 +40,7 @@ typedef NS_OPTIONS(NSUInteger, KTSContactsManagerField){
                                                    KTSContactsManagerFieldFirstName         |
                                                    KTSContactsManagerFieldFirstNamePhonetic |
                                                    KTSContactsManagerFieldImage             |
+                                                   KTSContactsManagerFieldHasImage          |
                                                    KTSContactsManagerFieldJobTitle          |
                                                    KTSContactsManagerFieldLastName          |
                                                    KTSContactsManagerFieldLastNamePhonetic  |
@@ -68,6 +70,7 @@ typedef NS_OPTIONS(NSUInteger, KTSContactsManagerField){
 
 - (void)importContacts:(void (^)(NSArray *contacts))contactsHandler;
 //- (void)importContactsWithFields:(KTSContactsManagerField)fields contactsHandler:(void (^)(NSArray *))contactsHandler;
+- (NSData *)fetchImageDataForContact:(NSString *)contactId;
 - (void)addContactName:(NSString *)firstName lastName:(NSString *)lastName phones:(NSArray *)phonesList emails:(NSArray *)emailsList birthday:(NSDate *)birthday image:(UIImage *)image completion:(void (^)(BOOL wasAdded))added;
 //- (void)addContactName:(NSString *)firstName lastName:(NSString *)lastName phones:(NSArray *)phonesList emails:(NSArray *)emailsList birthday:(NSDate *)birthday completion:(void (^)(BOOL wasAdded))added __attribute__((deprecated));
 - (void)removeContactById:(NSInteger)contactID completion:(void (^)(BOOL wasRemoved))removed;
