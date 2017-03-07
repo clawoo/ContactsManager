@@ -58,6 +58,7 @@
             {
                 NSMutableArray *contactsList = [(__bridge NSArray *)ABAddressBookCopyArrayOfAllPeople(addressBook) mutableCopy];
                 contactsHandler([[NSArray alloc] initWithArray:[self extractContactsInDictionary:contactsList extractOptions:KTSContactsManagerFieldAll]]);
+                CFRelease(addressBook);
             }
         });
         return;
@@ -69,6 +70,7 @@
         ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(nil, error);
         NSMutableArray *contactsList = [(__bridge NSArray *)ABAddressBookCopyArrayOfAllPeople(addressBook) mutableCopy];
         contactsHandler([[NSArray alloc] initWithArray:[self extractContactsInDictionary:contactsList extractOptions:KTSContactsManagerFieldAll]]);
+        CFRelease(addressBook);
         return;
     }
 }
