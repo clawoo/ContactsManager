@@ -90,7 +90,7 @@
             CFDataRef cfData = ABPersonCopyImageDataWithFormat(record, kABPersonImageFormatOriginalSize);
             NSData *data = nil;
             if (cfData) {
-                NSData *data = [NSData dataWithData:cfData];
+                data = [NSData dataWithData:cfData];
                 CFRelease(cfData);
             }
             CFRelease(addressBook);
