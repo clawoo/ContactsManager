@@ -42,7 +42,7 @@
 
 - (void)importContacts:(void (^)(NSArray *))contactsHandler
 {
-    KTSContactsManagerField fields = KTSContactsManagerFieldLastName | KTSContactsManagerFieldFirstName | KTSContactsManagerFieldNickName | KTSContactsManagerFieldCompany | KTSContactsManagerFieldPhones | KTSContactsManagerFieldPersonID | KTSContactsManagerFieldHasImage;
+    KTSContactsManagerField fields = KTSContactsManagerFieldLastName | KTSContactsManagerFieldFirstName | KTSContactsManagerFieldNickName | KTSContactsManagerFieldCompany | KTSContactsManagerFieldPhones | KTSContactsManagerFieldPersonID | KTSContactsManagerFieldHasImage | KTSContactsManagerFieldUpdatedAt | KTSContactsManagerFieldCreatedAt;
     
     if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied || ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusRestricted)
     {
